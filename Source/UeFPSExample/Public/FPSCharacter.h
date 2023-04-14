@@ -4,7 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+//引入摄像机和胶囊体头文件
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+
 #include "FPSCharacter.generated.h"
+
+
 
 UCLASS()
 class UEFPSEXAMPLE_API AFPSCharacter : public ACharacter
@@ -32,4 +38,19 @@ public:
 	//左右移动函数声明
 	UFUNCTION()
 	void MoveRight(float Value);
+
+	//声明跳跃函数
+	UFUNCTION()
+	void StartJump();
+	//释放跳跃函数声明
+	UFUNCTION()
+	void StopJump();
+
+	//FPS摄像机配置
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* FPSCameraComponent;
+
+	//第一人称网格体，仅玩家可见
+	UPROPERTY(VisibleDefaultsOnly,Category=Mesh)
+	USkeletalMeshComponent* FPSMesh;
 };
