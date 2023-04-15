@@ -7,7 +7,7 @@
 //引入摄像机和胶囊体头文件
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-
+#include "FPSBullets.h"
 #include "FPSCharacter.generated.h"
 
 
@@ -46,6 +46,18 @@ public:
 	UFUNCTION()
 	void StopJump();
 
+	//声明发射子弹函数
+	UFUNCTION()
+	void Fire();
+
+	//发射位置相对于摄像机偏移
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=Gameplay)
+	FVector MuzzleOffset;
+
+	//生成子弹类
+	UPROPERTY(EditDefaultsOnly,Category=Bullets)
+	TSubclassOf<class AFPSBullets> BulletsClass;
+
 	//FPS摄像机配置
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;
@@ -53,4 +65,6 @@ public:
 	//第一人称网格体，仅玩家可见
 	UPROPERTY(VisibleDefaultsOnly,Category=Mesh)
 	USkeletalMeshComponent* FPSMesh;
+
+	
 };

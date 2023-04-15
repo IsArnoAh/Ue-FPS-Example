@@ -29,6 +29,7 @@ AFPSCharacter::AFPSCharacter()
 	FPSMesh->CastShadow=false;
 	//隐藏玩家的第三人称网格体
 	GetMesh()->SetOwnerNoSee(false);
+	
 }
 
 // Called when the game starts or when spawned
@@ -57,9 +58,11 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	//镜头移动绑定
 	PlayerInputComponent->BindAxis("Turn",this,&AFPSCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp",this,&AFPSCharacter::AddControllerPitchInput);
-	//操作跳跃事件绑定
+	//操作Jump绑定
 	PlayerInputComponent->BindAction("Jump",IE_Pressed,this,&AFPSCharacter::StartJump);
 	PlayerInputComponent->BindAction("Jump",IE_Released,this,&AFPSCharacter::StopJump);
+	//操作Fire绑定
+	PlayerInputComponent->BindAction("Fire",IE_Pressed,this,&AFPSCharacter::Fire);
 }
 //前后移动实现
 void AFPSCharacter::MoveForward(float Value)
@@ -83,6 +86,41 @@ void AFPSCharacter::StopJump()
 {
 	bPressedJump=false;
 }
+
+void AFPSCharacter::Fire()
+{
+	//尝试发射子弹
+	if (BulletsClass)
+	{
+		//获取摄像机位置
+		FVector CamerLocation;
+		FRotator CamerRotation;
+		GetActorEyesViewPoint(CamerLocation,CamerRotation);
+		//设置MuzzleOffset，发射位置与摄像机的偏移
+		MuzzleOffset.Set(100.0f,0.0f,0.0f);
+		//将MuzzleOffset从摄像机空间变化到场景空间
+		FVector MuzzleLocation=CamerLocation + FTransform(CamerRotation).TransformVector(MuzzleOffset);
+		//将目标方向向上偏移
+		FRotator MuzzleRotating=CamerRotation;
+		MuzzleRotating.Pitch+=10.0f;
+		
+		UWorld* World=GetWorld();//获取当前地图
+		if (World)
+		{
+			FActorSpawnParameters SpawnParameters;
+			SpawnParameters.Owner=this;//生成玩家参数
+			SpawnParameters.Instigator=GetInstigator();//获取参数启动状态
+			//在偏移点生成子弹
+			AFPSBullets* Bullets=World->SpawnActor<AFPSBullets>(BulletsClass,MuzzleLocation,MuzzleRotating,SpawnParameters);
+			if (Bullets)//生成子弹成功，设置子弹轨迹参数
+			{
+				Bullets->FireInDirection(MuzzleRotating.Vector());
+			}
+			
+		}
+	}
+}
+
 
 
 
