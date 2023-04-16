@@ -84,13 +84,13 @@ void AFPSBullets::FireInDirection(const FVector& shootDirection)
 //子弹发射调用函数
 void AFPSBullets::OnHit(UPrimitiveComponent* HItComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormaImpulse, const FHitResult& Hit)
 {
-	if (OtherActor !=this && OtherComponent->IsSimulatingPhysics())
+	if (OtherActor !=this && OtherComponent->IsSimulatingPhysics())//有物理模拟物体的通道
 	{
 		OtherComponent->AddImpulseAtLocation(BulletsMovementComponent->Velocity*5.0f,Hit.ImpactNormal);//让被击中的物体后退5.0f个位置向量
 		GEngine->AddOnScreenDebugMessage(1,1.0f,FColor::Yellow,TEXT("work"));
 		Destroy();
 	}
-	if (OtherActor !=this && OtherComponent)
+	if (OtherActor !=this && OtherComponent)//无物理模拟的物体通道
 	{
 		Destroy();
 	}
