@@ -14,8 +14,12 @@ AFPSBullets::AFPSBullets()
     }
     if (!CollisionComponent)
     {
-    	//组装子弹模型（碰撞球体）
+    	//组装子弹碰撞（碰撞球体）
 	    CollisionComponent=CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+		//将球体的碰撞文件名称设置为”Bullets“
+    	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Bullets"));
+    	//子弹命中调用事件
+    	CollisionComponent->OnComponentHit.AddDynamic(this,&AFPSBullets::OnHit);
     	//子弹碰撞半径
     	CollisionComponent->InitSphereRadius(15.0f);
     	//组件类型设置为碰撞组件
@@ -71,9 +75,19 @@ void AFPSBullets::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+//子弹发射向上偏移函数
 void AFPSBullets::FireInDirection(const FVector& shootDirection)
 {
 	BulletsMovementComponent->Velocity=shootDirection * BulletsMovementComponent->InitialSpeed;
 }
+//子弹发射调用函数
+void AFPSBullets::OnHit(UPrimitiveComponent* HItComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormaImpulse, const FHitResult& Hit)
+{
+	if (OtherActor !=this && OtherComponent->IsSimulatingPhysics())
+	{
+		OtherComponent->AddImpulseAtLocation(BulletsMovementComponent->Velocity*100.0f,Hit.ImpactNormal);
+	}
+}
+
 
 
