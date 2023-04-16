@@ -40,7 +40,7 @@ public:
 	//子弹材质
 	UPROPERTY(VisibleDefaultsOnly,Category=Material)
 	UMaterialInstanceDynamic* BulletsMaterialInstance;
-	//子弹发射调用函数
+	//子弹发射命中调用函数
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HItComponent,AActor* OtherActor,UPrimitiveComponent* OtherComponent,FVector NormaImpulse,const FHitResult& Hit);
 

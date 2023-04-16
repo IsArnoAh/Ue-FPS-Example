@@ -33,8 +33,8 @@ AFPSBullets::AFPSBullets()
 	    //使用组件驱动发射子弹
     	BulletsMovementComponent=CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("BulletsMovementComponent"));
     	BulletsMovementComponent->SetUpdatedComponent(CollisionComponent);//更新碰撞
-    	BulletsMovementComponent->InitialSpeed=3000.0f;//设置初速度
-    	BulletsMovementComponent->MaxSpeed=3000.0f;//设置最大速度
+    	BulletsMovementComponent->InitialSpeed=5000.0f;//设置初速度
+    	BulletsMovementComponent->MaxSpeed=5000.0f;//设置最大速度
     	BulletsMovementComponent->bRotationFollowsVelocity=true;//匹配速度方向
     	BulletsMovementComponent->bShouldBounce=false;//不可反弹
     	BulletsMovementComponent->ProjectileGravityScale=0.005f;//自身重力

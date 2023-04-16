@@ -28,7 +28,7 @@ AFPSCharacter::AFPSCharacter()
 	FPSMesh->bCastDynamicShadow=false;
 	FPSMesh->CastShadow=false;
 	//隐藏玩家的第三人称网格体
-	GetMesh()->SetOwnerNoSee(false);
+	GetMesh()->SetOwnerNoSee(true);
 	
 }
 
@@ -97,12 +97,12 @@ void AFPSCharacter::Fire()
 		FRotator CamerRotation;
 		GetActorEyesViewPoint(CamerLocation,CamerRotation);
 		//设置MuzzleOffset，发射位置与摄像机的偏移
-		MuzzleOffset.Set(100.0f,0.0f,0.0f);
+		MuzzleOffset.Set(200.0f,0.0f,-20.0f);
 		//将MuzzleOffset从摄像机空间变化到场景空间
 		FVector MuzzleLocation=CamerLocation + FTransform(CamerRotation).TransformVector(MuzzleOffset);
 		//将目标方向向上偏移
 		FRotator MuzzleRotating=CamerRotation;
-		MuzzleRotating.Pitch+=10.0f;
+		MuzzleRotating.Pitch+=0.0f;
 		
 		UWorld* World=GetWorld();//获取当前地图
 		if (World)
