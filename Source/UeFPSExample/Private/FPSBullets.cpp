@@ -3,6 +3,8 @@
 
 #include "FPSBullets.h"
 
+#include "BehaviorTree/BehaviorTreeTypes.h"
+
 // Sets default values
 AFPSBullets::AFPSBullets()
 {
@@ -35,7 +37,7 @@ AFPSBullets::AFPSBullets()
     	BulletsMovementComponent->MaxSpeed=3000.0f;//设置最大速度
     	BulletsMovementComponent->bRotationFollowsVelocity=true;//匹配速度方向
     	BulletsMovementComponent->bShouldBounce=false;//不可反弹
-    	BulletsMovementComponent->ProjectileGravityScale=0.0f;//自身重力
+    	BulletsMovementComponent->ProjectileGravityScale=0.005f;//自身重力
     }
 	//创建出子弹静态网格体
     if (!BulletStaticMeshComponent)
@@ -58,7 +60,7 @@ AFPSBullets::AFPSBullets()
 	BulletStaticMeshComponent->SetRelativeScale3D(FVector(0.09f,0.09f,0.09f));
 	BulletStaticMeshComponent->SetupAttachment(RootComponent);
 }
-	InitialLifeSpan=3.0f;
+	InitialLifeSpan=2.0f;
 }
 
 
@@ -73,7 +75,6 @@ void AFPSBullets::BeginPlay()
 void AFPSBullets::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 //子弹发射向上偏移函数
 void AFPSBullets::FireInDirection(const FVector& shootDirection)
@@ -85,7 +86,13 @@ void AFPSBullets::OnHit(UPrimitiveComponent* HItComponent, AActor* OtherActor, U
 {
 	if (OtherActor !=this && OtherComponent->IsSimulatingPhysics())
 	{
-		OtherComponent->AddImpulseAtLocation(BulletsMovementComponent->Velocity*100.0f,Hit.ImpactNormal);
+		OtherComponent->AddImpulseAtLocation(BulletsMovementComponent->Velocity*5.0f,Hit.ImpactNormal);//让被击中的物体后退5.0f个位置向量
+		GEngine->AddOnScreenDebugMessage(1,1.0f,FColor::Yellow,TEXT("work"));
+		Destroy();
+	}
+	if (OtherActor !=this && OtherComponent)
+	{
+		Destroy();
 	}
 }
 
